@@ -15,6 +15,9 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1"
   },
+  "dependencies": {
+    "express": "^4.17.1"
+  },
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/sumitr25/salaman-backend-task.git"
