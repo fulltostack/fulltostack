@@ -1,0 +1,16 @@
+{
+  "name": "salamantex-backend-task",
+  "version": "1.0.0",
+  "description": "Salamantex Backend Task",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/sumitr25/salaman-backend-task.git"
+  },
+  "author": "Sumit Rajput <grt.sumitr25@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sumitr25/salaman-backend-task/issues"
+  },
+  "homepage": "https://github.com/sumitr25/salaman-backend-task#readme"
+}
