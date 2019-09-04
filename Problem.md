@@ -68,3 +68,6 @@ Please read the following descriptions very carefully. Then create a list of tas
 
 4. Create a simple website/webpage/application that uses the previously defined endpoints of the backend and lets the user enter the required information and/or display information according to the endpoint.
 ```
+
+## Solution
+- [Link](README.md)
