@@ -3,6 +3,18 @@
   "version": "1.0.0",
   "description": "Salamantex Backend Task",
   "main": "index.js",
+  "scripts": {
+    "prestart": "eslint .",
+    "start": "node index.js"
+  },
+  "devDependencies": {
+    "eslint": "^6.3.0",
+    "eslint-config-standard": "^14.1.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-node": "^9.2.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1"
+  },
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/sumitr25/salaman-backend-task.git"
