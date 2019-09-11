@@ -1,6 +1,8 @@
+const Responder = require('../../lib/expressResponder')
+
 function initRoutes (app) {
   app.get('/', (req, res) => {
-    res.end('Server Started')
+    Responder.success(res, 'Server Started')
   })
 }
 

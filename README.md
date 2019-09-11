@@ -13,6 +13,7 @@
 - `lib/logger.js` - Wrapper above winston module
 - `lib/sequelize.js` - Wrapper above sequelize module
 - `lib/shutdown.js` - Provides functionality to gracefully shutdown the server
+- `lib/expressResponder` - Wrapper which makes sure that the API responses are RESTful 
 - `.env` - Configs for the application. Note: DB_PASSWORD is kept in config only for demonstration purposes.
 - `.eslintrc` - Defines rules for Linting
 - `.gitignore` - File not to be pushed to git
