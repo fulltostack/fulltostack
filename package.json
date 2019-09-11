@@ -18,6 +18,7 @@
   "dependencies": {
     "dotenv": "^8.1.0",
     "express": "^4.17.1",
+    "http-graceful-shutdown": "^2.3.2",
     "pg": "^7.12.1",
     "sequelize": "^5.18.4",
     "winston": "^2.4.4"
