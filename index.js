@@ -1,10 +1,11 @@
 require('dotenv').config()
 
-const express = require('express')
-const app = express()
+const app = require('./lib')
 
-app.get('/', (req, res) => {
-  res.status(200).send({ message: 'Server Started!' })
-})
-
-app.listen(process.env.PORT, () => console.log('Server Started!')) // eslint-disable-line no-console
+app.start()
+  .then(message => {
+    console.log(message) // eslint-disable-line no-console
+  })
+  .catch(error => {
+    console.error(error) // eslint-disable-line no-console
+  })
