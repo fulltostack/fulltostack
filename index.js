@@ -4,8 +4,8 @@ const app = require('./lib')
 
 app.start()
   .then(message => {
-    console.log(message) // eslint-disable-line no-console
+    app.logger.info(message)
   })
   .catch(error => {
-    console.error(error) // eslint-disable-line no-console
+    app.logger.error(error)
   })
