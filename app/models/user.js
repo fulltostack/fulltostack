@@ -43,6 +43,7 @@ const UserSchema = (sequelize) => {
     btc_balance: {
       type: Sequelize.DECIMAL(18, 8),
       allowNull: false,
+      defaultValue: 0,
       validate: { min: 0, max: 1000000000 }
     },
     eth_address: {
@@ -60,6 +61,7 @@ const UserSchema = (sequelize) => {
     eth_balance: {
       type: Sequelize.DECIMAL(28, 18),
       allowNull: false,
+      defaultValue: 0,
       validate: { min: 0, max: 1000000000 }
     },
     transaction_max: {

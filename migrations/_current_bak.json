@@ -25,6 +25,13 @@
           "field": "email",
           "seqType": "Sequelize.STRING(1000)"
         },
+        "password": {
+          "allowNull": false,
+          "required": true,
+          "unique": false,
+          "field": "password",
+          "seqType": "Sequelize.TEXT"
+        },
         "btc_address": {
           "allowNull": false,
           "unique": true,
@@ -139,5 +146,5 @@
       "indexes": []
     }
   },
-  "revision": 1
+  "revision": 2
 }
