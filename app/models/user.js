@@ -30,7 +30,7 @@ const UserSchema = (sequelize) => {
     },
     btc_address: {
       type: Sequelize.STRING(34),
-      allowNull: false,
+      allowNull: true,
       validate: {
         isValidAddress: address => {
           if (!walletValidator.validate(address, 'BTC')) {
@@ -48,7 +48,7 @@ const UserSchema = (sequelize) => {
     },
     eth_address: {
       type: Sequelize.STRING(42),
-      allowNull: false,
+      allowNull: true,
       validate: {
         isValidAddress: address => {
           if (!walletValidator.validate(address, 'ETH')) {

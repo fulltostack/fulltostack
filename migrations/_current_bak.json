@@ -40,6 +40,9 @@
         },
         "btc_balance": {
           "allowNull": false,
+          "defaultValue": {
+            "value": 0
+          },
           "field": "btc_balance",
           "seqType": "Sequelize.DECIMAL(18, 8)"
         },
@@ -51,6 +54,9 @@
         },
         "eth_balance": {
           "allowNull": false,
+          "defaultValue": {
+            "value": 0
+          },
           "field": "eth_balance",
           "seqType": "Sequelize.DECIMAL(28, 18)"
         },
@@ -146,5 +152,5 @@
       "indexes": []
     }
   },
-  "revision": 2
+  "revision": 3
 }
