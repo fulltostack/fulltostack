@@ -5,15 +5,17 @@
 - `app` - Segregates the application related codebase
 - `app/models` - Contains Database Models
 - `app/models/index.js` - Configures Database
+- `app/models/transaction.js` - Configures Database
+- `app/models/user.js` - Configures Database
 - `app/routes` - Contains Express Routes
 - `app/routes/index.js` - Configures Base Express Routes
 - `lib` - Contains wrapper over other standard libraries
 - `lib/express.js` - Wrapper above express module
+- `lib/expressResponder` - Wrapper which makes sure that the API responses are RESTful
 - `lib/index.js` - Provide functionality to initialize the app
 - `lib/logger.js` - Wrapper above winston module
 - `lib/sequelize.js` - Wrapper above sequelize module
 - `lib/shutdown.js` - Provides functionality to gracefully shutdown the server
-- `lib/expressResponder` - Wrapper which makes sure that the API responses are RESTful 
 - `.env` - Configs for the application. Note: DB_PASSWORD is kept in config only for demonstration purposes.
 - `.eslintrc` - Defines rules for Linting
 - `.gitignore` - File not to be pushed to git
