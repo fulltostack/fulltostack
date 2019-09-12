@@ -1,4 +1,5 @@
 const Sequelize = require('sequelize')
+const createHash = require('../utils').createHash
 const walletValidator = require('wallet-address-validator')
 
 const UserSchema = (sequelize) => {
@@ -16,6 +17,15 @@ const UserSchema = (sequelize) => {
       allowNull: false,
       validate: {
         isEmail: true
+      }
+    },
+    password: {
+      type: Sequelize.TEXT,
+      allowNull: false,
+      required: true,
+      unique: false,
+      set (password) {
+        this.setDataValue('password', createHash(password, process.env.PASSWORD_SALT))
       }
     },
     btc_address: {
@@ -57,6 +67,14 @@ const UserSchema = (sequelize) => {
       allowNull: false,
       defaultValue: 1000,
       validate: { min: 0, max: 1000000000 }
+    }
+  }, {
+    hooks: {
+      beforeFind: (user) => {
+        if (user.where && user.where.password) {
+          user.where.password = createHash(user.where.password, process.env.PASSWORD_SALT)
+        }
+      }
     }
   })
 }
