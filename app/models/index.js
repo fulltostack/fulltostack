@@ -1,4 +1,6 @@
 const Sequelize = require('sequelize')
+const UserSchema = require('./user')
+const TransactionSchema = require('./transaction')
 
 const dbsettings = {
   host: process.env.DB_HOST,
@@ -21,6 +23,16 @@ const sequelize = new Sequelize(
   dbsettings
 )
 
+const User = UserSchema(sequelize)
+const Transaction = TransactionSchema(sequelize)
+
+Transaction.belongsTo(User, { foreignKey: { name: 'source_user_id', allowNull: false }, onDelete: 'cascade' })
+Transaction.belongsTo(User, { foreignKey: { name: 'target_user_id', allowNull: false }, onDelete: 'cascade' })
+User.hasMany(Transaction, { foreignKey: { name: 'source_user_id', allowNull: false }, onDelete: 'cascade' })
+User.hasMany(Transaction, { foreignKey: { name: 'target_user_id', allowNull: false }, onDelete: 'cascade' })
+
 module.exports = {
+  User,
+  Transaction,
   sequelize
 }
