@@ -6,7 +6,10 @@ const UserSchema = (sequelize) => {
   return sequelize.define('user', {
     name: {
       type: Sequelize.STRING(512),
-      allowNull: false
+      allowNull: false,
+      validate: {
+        isAlpha: true
+      }
     },
     description: {
       type: Sequelize.STRING(1000),
@@ -33,7 +36,7 @@ const UserSchema = (sequelize) => {
       allowNull: true,
       validate: {
         isValidAddress: address => {
-          if (!walletValidator.validate(address, 'BTC')) {
+          if (address && !walletValidator.validate(address, 'BTC')) {
             throw new Error('Invalid Ethereum Address')
           }
         }
@@ -51,7 +54,7 @@ const UserSchema = (sequelize) => {
       allowNull: true,
       validate: {
         isValidAddress: address => {
-          if (!walletValidator.validate(address, 'ETH')) {
+          if (address && !walletValidator.validate(address, 'ETH')) {
             throw new Error('Invalid Bitcoin Address')
           }
         }
