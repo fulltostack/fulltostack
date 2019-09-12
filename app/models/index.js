@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 const Sequelize = require('sequelize')
 const UserSchema = require('./user')
 const TransactionSchema = require('./transaction')

@@ -25,6 +25,7 @@
     "morgan": "^1.9.1",
     "pg": "^7.12.1",
     "sequelize": "^5.18.4",
+    "sequelize-auto-migrations": "^1.0.3",
     "wallet-address-validator": "^0.2.4",
     "winston": "^2.4.4"
   },
