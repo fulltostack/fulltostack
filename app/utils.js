@@ -1,4 +1,5 @@
 const crypto = require('crypto')
+const jwt = require('jsonwebtoken')
 
 const HASH_ALGO = 'sha512'
 const HASH_LENGTH = 64
@@ -14,4 +15,11 @@ function createHash (string, salt) {
   ).toString('hex')
 }
 
-module.exports = { createHash }
+function signRequest (request, expiresIn = 30 * 60) {
+  return {
+    token: jwt.sign(request, process.env.JWT_SECRET, { expiresIn }),
+    expiresIn
+  }
+}
+
+module.exports = { createHash, signRequest }

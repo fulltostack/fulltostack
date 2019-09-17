@@ -1,4 +1,5 @@
 const { User } = require('./../models')
+const { signRequest } = require('../utils')
 const Responder = require('../../lib/expressResponder')
 const validations = require('./../validations/schema')
 const BadRequestError = require('../errors/badRequestError')
@@ -28,7 +29,8 @@ class UserController {
   }
 
   static async signin (req, res) {
-    Responder.created(res, { status: 'Login successful' })
+    const token = signRequest(req.user)
+    Responder.created(res, token)
   }
 }
 
