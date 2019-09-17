@@ -1,7 +1,7 @@
+const { User } = require('./../models')
 const Responder = require('../../lib/expressResponder')
 const validations = require('./../validations/schema')
 const BadRequestError = require('../errors/badRequestError')
-const { User } = require('./../models')
 
 class UserController {
   static async signup (req, res) {
@@ -25,6 +25,10 @@ class UserController {
     await user.save()
 
     Responder.created(res, { status: 'User Created' })
+  }
+
+  static async signin (req, res) {
+    Responder.created(res, { status: 'Login successful' })
   }
 }
 
