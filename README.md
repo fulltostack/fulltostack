@@ -1,6 +1,9 @@
 # Problem Statement
 - [Link](Problem.md)
 
+## Postman Collection
+- `https://www.getpostman.com/collections/f6375bba2041c1c5d888`
+
 ## Directory Structure
 - `app` - Segregates the application related codebase
 - `app/controllers` - Defines Controller Function
