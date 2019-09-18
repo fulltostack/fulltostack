@@ -1,5 +1,6 @@
 const _ = require('lodash')
 const { of } = require('await-of')
+const { User } = require('./../models')
 const Responder = require('../../lib/expressResponder')
 const BadRequestError = require('../errors/badRequestError')
 
@@ -18,8 +19,20 @@ class WalletController {
       return Responder.operationFailed(res, new BadRequestError(`User already have a ${schema.name.toUpperCase()} wallet!`))
     }
 
+    const [walletExists, dbError] = await of(User.count({ where: { [address]: req.body[address] } }))
+    if (dbError) {
+      return Responder.operationFailed(res, dbError)
+    }
+    if (walletExists) {
+      return Responder.operationFailed(res, new BadRequestError(`${schema.name.toUpperCase()} wallet ${req.body[address]} already exists!`))
+    }
+
     req.user.set(walletDetails)
-    const update = await req.user.save()
+    const [update, updateError] = await of(req.user.save())
+
+    if (updateError) {
+      return Responder.operationFailed(res, updateError)
+    }
 
     Responder.created(res, _.pick(update, 'email', address, balance))
   }

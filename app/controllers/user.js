@@ -1,8 +1,9 @@
+const _ = require('lodash')
 const { of } = require('await-of')
 const { User } = require('./../models')
 const { signRequest } = require('../utils')
-const Responder = require('../../lib/expressResponder')
 const schemas = require('./../validations/schema')
+const Responder = require('../../lib/expressResponder')
 const BadRequestError = require('../errors/badRequestError')
 
 class UserController {
@@ -13,16 +14,23 @@ class UserController {
       return Responder.operationFailed(res, error)
     }
 
-    const userExists = await User.count({ where: { email: req.body.email } })
+    const [userExists, dbError] = await of(User.count({ where: { email: req.body.email } }))
+    if (dbError) {
+      return Responder.operationFailed(res, dbError)
+    }
     if (userExists) {
       return Responder.operationFailed(res, new BadRequestError('User is already Registered!'))
     }
 
     const user = new User(userDetails)
 
-    await user.save()
+    const [update, updateError] = await of(user.save())
 
-    Responder.created(res, { status: 'User Created' })
+    if (updateError) {
+      return Responder.operationFailed(res, updateError)
+    }
+
+    Responder.created(res, _.pick(update, 'name', 'email'))
   }
 
   static async signin (req, res) {
