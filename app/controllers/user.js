@@ -1,19 +1,16 @@
+const { of } = require('await-of')
 const { User } = require('./../models')
 const { signRequest } = require('../utils')
 const Responder = require('../../lib/expressResponder')
-const validations = require('./../validations/schema')
+const schemas = require('./../validations/schema')
 const BadRequestError = require('../errors/badRequestError')
 
 class UserController {
   static async signup (req, res) {
-    const schema = validations.signup()
-    const { error, value } = schema.validate(req.body)
-
-    const userDetails = value
+    const [userDetails, error] = await of(schemas.SIGNUP.validateBody(req.body))
 
     if (error) {
-      const reason = error.details[0].message.replace(new RegExp('"', 'g'), "'")
-      return Responder.operationFailed(res, new BadRequestError(reason))
+      return Responder.operationFailed(res, error)
     }
 
     const userExists = await User.count({ where: { email: req.body.email } })
