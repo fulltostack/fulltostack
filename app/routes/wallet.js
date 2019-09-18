@@ -1,11 +1,12 @@
 const express = require('express')
+const passport = require('passport')
 
 const WalletController = require('../controllers/wallet')
 
 function initWalletRoutes () {
   const WalletRouter = express.Router()
 
-  WalletRouter.post('/', WalletController.add)
+  WalletRouter.post('/', passport.authenticate('bearer'), WalletController.add)
 
   return WalletRouter
 }

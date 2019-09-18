@@ -22,4 +22,12 @@ function signRequest (request, expiresIn = 30 * 60) {
   }
 }
 
-module.exports = { createHash, signRequest }
+async function validateToken (token) {
+  return jwt.verify(token, process.env.JWT_SECRET)
+}
+
+function decodeToken (token) {
+  return jwt.decode(token)
+}
+
+module.exports = { createHash, signRequest, validateToken, decodeToken }
