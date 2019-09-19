@@ -80,7 +80,8 @@ const UserSchema = (sequelize) => {
           user.where.password = createHash(user.where.password, process.env.PASSWORD_SALT)
         }
       }
-    }
+    },
+    version: true
   })
 }
 
