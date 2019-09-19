@@ -16,6 +16,10 @@ const TransactionSchema = (sequelize) => {
       type: Sequelize.ENUM('PENDING', 'IN-PROGRESS', 'COMPLETED', 'ERROR'),
       defaultValue: 'PENDING',
       allowNull: false
+    },
+    reason: {
+      type: Sequelize.STRING(100),
+      allowNull: true
     }
   })
 }
