@@ -114,6 +114,11 @@
           "field": "state",
           "seqType": "Sequelize.ENUM('PENDING', 'IN-PROGRESS', 'COMPLETED', 'ERROR')"
         },
+        "reason": {
+          "allowNull": true,
+          "field": "reason",
+          "seqType": "Sequelize.STRING(100)"
+        },
         "createdAt": {
           "allowNull": false,
           "field": "created_at",
@@ -152,5 +157,5 @@
       "indexes": []
     }
   },
-  "revision": 4
+  "revision": 5
 }

@@ -33,7 +33,7 @@
           "seqType": "Sequelize.TEXT"
         },
         "btc_address": {
-          "allowNull": false,
+          "allowNull": true,
           "unique": true,
           "field": "btc_address",
           "seqType": "Sequelize.STRING(34)"
@@ -47,7 +47,7 @@
           "seqType": "Sequelize.DECIMAL(18, 8)"
         },
         "eth_address": {
-          "allowNull": false,
+          "allowNull": true,
           "unique": true,
           "field": "eth_address",
           "seqType": "Sequelize.STRING(42)"
@@ -152,5 +152,5 @@
       "indexes": []
     }
   },
-  "revision": 3
+  "revision": 4
 }
