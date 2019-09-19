@@ -77,6 +77,14 @@
           "allowNull": false,
           "field": "updated_at",
           "seqType": "Sequelize.DATE"
+        },
+        "version": {
+          "allowNull": false,
+          "defaultValue": {
+            "value": 0
+          },
+          "field": "version",
+          "seqType": "Sequelize.INTEGER"
         }
       },
       "indexes": []
@@ -157,5 +165,5 @@
       "indexes": []
     }
   },
-  "revision": 5
+  "revision": 6
 }
