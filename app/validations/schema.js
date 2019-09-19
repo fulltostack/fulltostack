@@ -41,6 +41,9 @@ const schemas = {
       { is: 'BTC', then: wallet.address().btc().required() },
       { is: 'ETH', then: wallet.address().eth().required() }
     ])
+  })),
+  GET_TRANSACTION: new JoiSchema('get_transaction', Joi.object().keys({
+    transactionId: Joi.number().required()
   }))
 }
 
