@@ -5,7 +5,10 @@ const TransactionSchema = (sequelize) => {
     currency_amount: {
       type: Sequelize.DECIMAL(28, 18),
       defaultValue: 1000,
-      validate: { min: 0, max: 1000000000 }
+      validate: { min: 0, max: 1000000000 },
+      get () {
+        return parseFloat(this.getDataValue('currency_amount'))
+      }
     },
     currency_type: {
       type: Sequelize.ENUM('BTC', 'ETH'),

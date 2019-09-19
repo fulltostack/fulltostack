@@ -47,7 +47,10 @@ const UserSchema = (sequelize) => {
       type: Sequelize.DECIMAL(18, 8),
       allowNull: false,
       defaultValue: 0,
-      validate: { min: 0, max: 1000000000 }
+      validate: { min: 0, max: 1000000000 },
+      get () {
+        return parseFloat(this.getDataValue('btc_balance'))
+      }
     },
     eth_address: {
       type: Sequelize.STRING(42),
@@ -65,7 +68,10 @@ const UserSchema = (sequelize) => {
       type: Sequelize.DECIMAL(28, 18),
       allowNull: false,
       defaultValue: 0,
-      validate: { min: 0, max: 1000000000 }
+      validate: { min: 0, max: 1000000000 },
+      get () {
+        return parseFloat(this.getDataValue('eth_balance'))
+      }
     },
     transaction_max: {
       type: Sequelize.DECIMAL(28, 18),
