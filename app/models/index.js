@@ -36,5 +36,6 @@ User.hasMany(Transaction, { foreignKey: { name: 'target_user_id', allowNull: fal
 module.exports = {
   User,
   Transaction,
-  sequelize
+  sequelize,
+  Sequelize
 }
