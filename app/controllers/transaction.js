@@ -128,6 +128,10 @@ class TransactionController {
 
     const isSourceUser = transaction.source_user_id === req.user.id
 
+    if (!isSourceUser && transaction.target_user_id !== req.user.id) {
+      return Responder.operationFailed(res, new BadRequestError('The transaction does not belong to you.'))
+    }
+
     const otherUserId = isSourceUser ? transaction.target_user_id : transaction.source_user_id
 
     const walletAddressField = `${transaction.currency_type.toLowerCase()}_address`
