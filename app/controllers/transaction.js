@@ -70,15 +70,35 @@ class TransactionController {
     const offset = (page - 1) * count
     const limit = offset + count
     const where = Sequelize.or({ source_user_id: req.user.id }, { target_user_id: req.user.id })
-    const attributes = ['id', 'currency_amount', 'currency_type', 'source_user_id', 'target_user_id', 'state']
-    const [[transactions, totalTransactions], dbError] = await of(Promise.all([
-      Transaction.findAll({ where, attributes, limit, offset }),
+    const attributes = ['id', 'state', 'currency_amount', 'currency_type', 'source_user_id', 'target_user_id']
+    const include = [{
+      model: User,
+      attributes: ['id', 'eth_address', 'btc_address'],
+      as: 'source_user'
+    }, {
+      model: User,
+      attributes: ['id', 'eth_address', 'btc_address'],
+      as: 'target_user'
+    }]
+    const [[rawTransactions, totalTransactions], dbError] = await of(Promise.all([
+      Transaction.findAll({ where, attributes, limit, offset, include }),
       Transaction.count()
     ]))
 
     if (dbError) {
       return Responder.operationFailed(res, dbError)
     }
+
+    const transactions = rawTransactions.map(transaction => {
+      const walletAddress = `${transaction.currency_type.toLowerCase()}_address`
+      return _.extend(
+        _.pick(transaction, 'id', 'state', 'currency_amount', 'currency_type'), {
+          from_address: transaction.source_user[walletAddress],
+          to_address: transaction.target_user[walletAddress],
+          transaction_type: transaction.source_user_id === req.user.id ? 'OUTBOUND' : 'INBOUND'
+        }
+      )
+    })
 
     Responder.success(res, {
       transactions,

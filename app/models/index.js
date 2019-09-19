@@ -28,10 +28,10 @@ const sequelize = new Sequelize(
 const User = UserSchema(sequelize)
 const Transaction = TransactionSchema(sequelize)
 
-Transaction.belongsTo(User, { foreignKey: { name: 'source_user_id', allowNull: false }, onDelete: 'cascade' })
-Transaction.belongsTo(User, { foreignKey: { name: 'target_user_id', allowNull: false }, onDelete: 'cascade' })
-User.hasMany(Transaction, { foreignKey: { name: 'source_user_id', allowNull: false }, onDelete: 'cascade' })
-User.hasMany(Transaction, { foreignKey: { name: 'target_user_id', allowNull: false }, onDelete: 'cascade' })
+Transaction.belongsTo(User, { as: 'source_user', foreignKey: { name: 'source_user_id', allowNull: false }, onDelete: 'cascade' })
+Transaction.belongsTo(User, { as: 'target_user', foreignKey: { name: 'target_user_id', allowNull: false }, onDelete: 'cascade' })
+User.hasMany(Transaction, { as: 'source_user', foreignKey: { name: 'source_user_id', allowNull: false }, onDelete: 'cascade' })
+User.hasMany(Transaction, { as: 'target_user', foreignKey: { name: 'target_user_id', allowNull: false }, onDelete: 'cascade' })
 
 module.exports = {
   User,
