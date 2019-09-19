@@ -110,7 +110,45 @@ class TransactionController {
   }
 
   static async status (req, res) {
-    Responder.success(res, 'Transaction Status')
+    const [request, error] = await of(schemas.GET_TRANSACTION.validateBody(req.params))
+
+    if (error) {
+      return Responder.operationFailed(res, error)
+    }
+
+    const attributes = ['id', 'state', 'currency_amount', 'currency_type', 'source_user_id', 'target_user_id']
+    const [transaction, dbError] = await of(Transaction.findOne({ where: { id: request.transactionId }, attributes, raw: true }))
+
+    if (dbError) {
+      return Responder.operationFailed(res, dbError)
+    }
+
+    const isSourceUser = transaction.source_user_id === req.user.id
+
+    const otherUserId = isSourceUser ? transaction.target_user_id : transaction.source_user_id
+
+    const walletAddressField = `${transaction.currency_type.toLowerCase()}_address`
+
+    const [otherUser, dbUserError] = await of(User.findOne({ where: { id: otherUserId }, attributes: [walletAddressField], raw: true }))
+
+    if (dbUserError) {
+      return Responder.operationFailed(res, dbError)
+    }
+
+    if (isSourceUser) {
+      transaction.from_address = req.user[walletAddressField]
+      transaction.to_address = otherUser[walletAddressField]
+      transaction.transaction_type = 'OUTBOUND'
+    } else {
+      transaction.from_address = otherUser[walletAddressField]
+      transaction.to_address = req.user[walletAddressField]
+      transaction.transaction_type = 'INBOUND'
+    }
+
+    delete transaction.source_user_id
+    delete transaction.target_user_id
+
+    Responder.success(res, transaction)
   }
 }
 
