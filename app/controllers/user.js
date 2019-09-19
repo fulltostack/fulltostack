@@ -7,6 +7,11 @@ const Responder = require('../../lib/expressResponder')
 const BadRequestError = require('../errors/badRequestError')
 
 class UserController {
+  static async me (req, res) {
+    const user = _.pick(req.user, 'name', 'email', 'btc_address', 'btc_balance', 'eth_address', 'eth_balance', 'transaction_max')
+    Responder.success(res, user)
+  }
+
   static async signup (req, res) {
     const [userDetails, error] = await of(schemas.SIGNUP.validateBody(req.body))
 
