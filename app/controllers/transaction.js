@@ -1,10 +1,9 @@
 const _ = require('lodash')
 const { of } = require('await-of')
-const { User } = require('./../models')
-const { Transaction } = require('./../models')
 const schemas = require('./../validations/schema')
 const Responder = require('../../lib/expressResponder')
 const BadRequestError = require('../errors/badRequestError')
+const { User, Transaction, Sequelize } = require('./../models')
 
 class TransactionController {
   static async add (req, res) {
@@ -58,15 +57,30 @@ class TransactionController {
     }
 
     const response = _.extend(
-      _.pick(req.body, 'currency_amount', 'to_address'),
-      { transaction_id: update.id, state: update.state, from_address: req.user[address] }
+      { transaction_id: update.id, state: update.state, from_address: req.user[address] },
+      _.pick(req.body, 'to_address', 'currency_amount')
     )
 
     Responder.created(res, response)
   }
 
   static async list (req, res) {
-    Responder.success(res, 'Transaction History')
+    const page = req.query.page || 1
+    const count = req.query.count || 10
+    const offset = (page - 1) * count
+    const limit = offset + count
+    const where = Sequelize.or({ source_user_id: req.user.id }, { target_user_id: req.user.id })
+    const attributes = ['id', 'currency_amount', 'currency_type', 'source_user_id', 'target_user_id', 'state']
+    const [[transactions, totalTransactions], dbError] = await of(Promise.all([
+      Transaction.findAll({ where, attributes, limit, offset }),
+      Transaction.count()
+    ]))
+
+    if (dbError) {
+      return Responder.operationFailed(res, dbError)
+    }
+
+    Responder.success(res, { transactions, count: totalTransactions })
   }
 
   static async status (req, res) {
