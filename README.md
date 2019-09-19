@@ -45,3 +45,92 @@
 - `package.json` - Describes some metadata related to project, like version, dependencies, author, etc.
 - `Problem.md` - Original Problem Statement
 - `README.md` - Contains steps for setup and other information about the solution
+
+## Sample API Responses
+```
+GET /_ping
+{
+  "result": "Ping Received!!!"
+}
+
+{unknown-endpoint}
+{
+  "reason": "Not Found"
+}
+
+POST /users/signup
+{
+  "name": "Peter",
+  "email": "peter@yopmail.com"
+}
+
+POST /users/signin
+{
+  "token": "token_string",
+  "expiresIn": 1800
+}
+
+POST /wallets/eth
+{
+  "email": "peter@yopmail.com",
+  "eth_address": "0xbbf5029fd710d227630c8b7d338051b8e76d50b3",
+  "eth_balance": 123456
+}
+
+POST /wallets/btc
+{
+  "email": "peter@yopmail.com",
+  "btc_address": "3QrpV6j1boaCcydvXfkvG7LxBxegB9HLp5",
+  "btc_balance": 123456
+}
+
+POST /transactions
+{
+  "transaction_id": 2,
+  "state": "PENDING",
+  "from_address": "0xbbf5029fd710d227630c8b7d338051b8e76d50b2",
+  "to_address": "0xbbf5029fd710d227630c8b7d338051b8e76d50b3",
+  "currency_amount": 10
+}
+
+GET /transactions?page&count
+{
+  "transactions": [
+    {
+      "id": 1,
+      "state": "PENDING",
+      "currency_amount": "10.000000000000000000",
+      "currency_type": "BTC",
+      "from_address": "3QrpV6j1boaCcydvXfkvG7LxBxegB9HLp5",
+      "to_address": "1MvYASoHjqynMaMnP7SBmenyEWiLsTqoU6",
+      "transaction_type": "INBOUND"
+    }
+  ],
+  "page": 1,
+  "max_page": 1,
+  "fetched_transactions": 1,
+  "total_transactions": 1
+}
+
+GET /transactions/:id/status
+{
+  "id": 1,
+  "state": "PENDING",
+  "currency_amount": "10.000000000000000000",
+  "currency_type": "BTC",
+  "from_address": "3QrpV6j1boaCcydvXfkvG7LxBxegB9HLp5",
+  "to_address": "1MvYASoHjqynMaMnP7SBmenyEWiLsTqoU6",
+  "transaction_type": "INBOUND"
+}
+
+GET /users/me
+{
+  "name": "Peter",
+  "email": "peter@yopmail.com",
+  "btc_address": "3QrpV6j1boaCcydvXfkvG7LxBxegB9HLp5",
+  "btc_balance": "10000.00000000",
+  "eth_address": null,
+  "eth_balance": "0.000000000000000000",
+  "transaction_max": "10.000000000000000000"
+}
+```
