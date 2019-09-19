@@ -3,6 +3,7 @@ const { of } = require('await-of')
 const schemas = require('./../validations/schema')
 const Responder = require('../../lib/expressResponder')
 const BadRequestError = require('../errors/badRequestError')
+const { transactionProducer } = require('./../../lib/queue')
 const { User, Transaction, Sequelize } = require('./../models')
 
 class TransactionController {
@@ -60,6 +61,8 @@ class TransactionController {
       { transaction_id: update.id, state: update.state, from_address: req.user[address] },
       _.pick(req.body, 'to_address', 'currency_amount')
     )
+
+    transactionProducer.push(update.id)
 
     Responder.created(res, response)
   }
