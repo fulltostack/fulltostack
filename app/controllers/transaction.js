@@ -80,7 +80,13 @@ class TransactionController {
       return Responder.operationFailed(res, dbError)
     }
 
-    Responder.success(res, { transactions, count: totalTransactions })
+    Responder.success(res, {
+      transactions,
+      page,
+      max_page: Math.ceil(totalTransactions / count),
+      fetched_transactions: transactions.length,
+      total_transactions: totalTransactions
+    })
   }
 
   static async status (req, res) {
