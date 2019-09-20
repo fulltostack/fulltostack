@@ -3,18 +3,15 @@ import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { signup } from '../actions/actionCreators';
-import signupReducer from '../reducers/signup.reduer';
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = theme => ({
   '@global': {
     body: {
       backgroundColor: theme.palette.common.white,
@@ -37,7 +34,7 @@ const useStyles = makeStyles(theme => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
-}));
+});
 
 class SignupForm extends React.Component {
   constructor(props) {
@@ -67,7 +64,7 @@ class SignupForm extends React.Component {
     this.props.signup(formdata);
   }
   render() {
-    const classes = useStyles();
+    const classes = this.props.classes;
 
     return (
       <Container component="main" maxWidth="xs">
@@ -148,4 +145,4 @@ const mapDispatchToProps = dispatch =>
     dispatch
   );
 
-export default connect(mapStateToProps, mapDispatchToProps)(SignupForm);
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(useStyles)(SignupForm));
