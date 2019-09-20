@@ -12,6 +12,7 @@ import Container from '@material-ui/core/Container';
 import { login } from '../actions/actionCreators';
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux';
+import { getLocalStorage } from '../utils'
 
 const useStyles = theme => ({
   '@global': {
@@ -63,8 +64,15 @@ class LoginForm extends React.Component {
     }
     this.props.login(formdata);
   }
+
+  componentDidMount() {
+    const token = localStorage.getItem('token');
+    this.setState({ token });
+  }
+
   render() {
     const classes = this.props.classes;
+    const { token } = this.props;
 
     return (
       <Container component="main" maxWidth="xs">
@@ -125,6 +133,7 @@ class LoginForm extends React.Component {
 
 
 const mapStateToProps = state => ({
+  token: state.loginReducer.token,
   email: state.loginReducer.email,
   password: state.loginReducer.password
 });

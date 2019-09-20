@@ -11,6 +11,7 @@ import {
   loginfailed
 } from '../actions/actionCreators'
 import { login } from '../constants/config'
+var base64 = require('base-64');
 
 const loginRequest = payload =>
   fetch(
@@ -19,16 +20,14 @@ const loginRequest = payload =>
       method: 'POST',
       headers: {
         'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        email: payload.email,
-        password: payload.password
-      })
+        'Content-Type': 'application/json',
+        'Authorization': 'Basic ' + base64.encode(payload.email + ":" + payload.password),
+      }
     }
   )
     .then(res => {
       if (res.status === 201) { return res.json() }
+
     })
     .catch(error => {
       throw error
