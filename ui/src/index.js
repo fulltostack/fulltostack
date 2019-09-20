@@ -8,7 +8,6 @@ import reducer from './reducers';
 import './index.css';
 import App from './App';
 import rootSaga from './sagas';
-// import * as serviceWorker from './serviceWorker';
 
 const sagaMiddleware = createSagaMiddleware();
 

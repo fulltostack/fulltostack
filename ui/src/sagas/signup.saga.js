@@ -28,8 +28,13 @@ const signupRequest = payload =>
       })
     }
   )
-    .then(res => {
-      if (res.status === 201) { return res.json() }
+    .then(async res => {
+      if (res.status >= 200 && res.status < 400) { 
+        return res.json(); 
+      } else {
+        const response = await res.json();
+        throw Error(response.reason);
+      }
     })
     .catch(error => {
       throw error
@@ -40,7 +45,7 @@ function* signupReq(action) {
     const response = yield call(signupRequest, action.payload)
     yield put(signupsuccess(response))
   } catch (err) {
-    yield put(signupfailed(err))
+    yield put(signupfailed(err.message))
   }
 }
 

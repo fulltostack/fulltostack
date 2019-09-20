@@ -1,4 +1,5 @@
 import React from 'react';
+import { Redirect } from 'react-router-dom';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -36,7 +37,7 @@ const useStyles = theme => ({
   },
 });
 
-class SignupForm extends React.Component {
+class Signup extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -55,16 +56,12 @@ class SignupForm extends React.Component {
   handleSubmit = event => {
     event.preventDefault();
     const { email, password,name } = this.state;
-
-    const formdata = {
-      name: name,
-      email: email,
-      password: password
-    }
-    this.props.signup(formdata);
+    this.props.signup({ name, email, password });
   }
   render() {
     const classes = this.props.classes;
+
+    if (this.props.isSignupSuccess) return <Redirect to={'/login'} />;
 
     return (
       <Container component="main" maxWidth="xs">
@@ -75,7 +72,7 @@ class SignupForm extends React.Component {
           </Avatar>
           <Typography component="h1" variant="h5">
             Sign up
-        </Typography>
+          </Typography>
           <form className={classes.form} onSubmit={this.handleSubmit}>
           <TextField
               variant="outlined"
@@ -87,7 +84,6 @@ class SignupForm extends React.Component {
               autoComplete="name"
               onChange={(event) => this.handleChange(event, 'name')}
               autoFocus
-              required
             />
             <TextField
               variant="outlined"
@@ -99,8 +95,6 @@ class SignupForm extends React.Component {
               name="email"
               autoComplete="email"
               onChange={(event) => this.handleChange(event, 'email')}
-              autoFocus
-              required
             />
             <TextField
               variant="outlined"
@@ -113,8 +107,13 @@ class SignupForm extends React.Component {
               id="password"
               onChange={(event) => this.handleChange(event, 'password')}
               autoComplete="current-password"
-              required
             />
+            {
+              this.props.error && 
+              <Typography component="h1" variant="h6">
+                {this.props.error}
+              </Typography>
+            }
             <Button
               type="submit"
               fullWidth
@@ -133,9 +132,8 @@ class SignupForm extends React.Component {
 
 
 const mapStateToProps = state => ({
-  name: state.signupReducer.name,
-  email: state.signupReducer.email,
-  password: state.signupReducer.password
+  isSignupSuccess: state.signup.isSignupSuccess,
+  error: state.signup.error,
 });
 
 const mapDispatchToProps = dispatch =>
@@ -145,4 +143,7 @@ const mapDispatchToProps = dispatch =>
     dispatch
   );
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(useStyles)(SignupForm));
+export default connect(
+  mapStateToProps, 
+  mapDispatchToProps,
+)(withStyles(useStyles)(Signup));

@@ -11,9 +11,9 @@ import {
   loginfailed
 } from '../actions/actionCreators'
 import { login } from '../constants/config'
-var base64 = require('base-64');
+import { AUTHENTICATION_TOKEN } from '../constants/config';
 
-const loginRequest = payload =>
+const loginRequest = ({ email, password }) =>
   fetch(
     login,
     {
@@ -21,13 +21,16 @@ const loginRequest = payload =>
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        'Authorization': 'Basic ' + base64.encode(payload.email + ":" + payload.password),
-      }
+        'Authorization': `Basic ${Buffer.from(`${email}:${password}`).toString('base64')}`,
+      },
     }
   )
-    .then(res => {
-      if (res.status === 201) { return res.json() }
-
+    .then(async res => {
+      if (res.status >= 200 && res.status < 400) { 
+        return res.json(); 
+      } else {
+        const response = await res.json();
+        throw Error(response.reason);      }
     })
     .catch(error => {
       throw error
@@ -36,6 +39,7 @@ const loginRequest = payload =>
 function* loginReq(action) {
   try {
     const response = yield call(loginRequest, action.payload)
+    localStorage.setItem(AUTHENTICATION_TOKEN, response.token);
     yield put(loginsuccess(response))
   } catch (err) {
     yield put(loginfailed(err))

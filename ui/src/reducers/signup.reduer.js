@@ -1,26 +1,29 @@
 import {
-  SIGNUP_SUCCESS
+  SIGNUP_SUCCESS,
+  SIGNUP_FAILED,
 } from '../actions/actionTypes'
 
 const initialState = {
-  email: '',
-  password: '',
-  name: '',
-  description: ''
+  isSignupSuccess: false,
+  error: '',
 }
 
-const signupReducer = function (state = initialState, action) {
+const signup = function (state = initialState, action) {
   switch (action.type) {
-  case SIGNUP_SUCCESS:
-    return ({
-      ...state,
-      name: action.data.name,
-      email: action.data.email,
-      password: action.data.password
-    })
-  default:
-    return state
+    case SIGNUP_SUCCESS:
+      return ({
+        ...state,
+        isSignupSuccess: true,
+      })
+      case SIGNUP_FAILED:
+        return ({
+          ...state,
+          isSignupSuccess: false,
+          error: action.error,
+        })
+    default:
+      return state
   }
 }
 
-export default signupReducer
+export default signup

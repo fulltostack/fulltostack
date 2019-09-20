@@ -1,4 +1,5 @@
 import React from 'react';
+import { Redirect } from 'react-router-dom';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -39,7 +40,7 @@ const useStyles = theme => ({
   },
 });
 
-class LoginForm extends React.Component {
+class Login extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -65,14 +66,11 @@ class LoginForm extends React.Component {
     this.props.login(formdata);
   }
 
-  componentDidMount() {
-    const token = localStorage.getItem('token');
-    this.setState({ token });
-  }
-
   render() {
     const classes = this.props.classes;
     const { token } = this.props;
+
+    if (this.props.isLoginSuccess) return <Redirect to={'/home'} />;
 
     return (
       <Container component="main" maxWidth="xs">
@@ -96,7 +94,6 @@ class LoginForm extends React.Component {
               autoComplete="email"
               onChange={(event) => this.handleChange(event, 'email')}
               autoFocus
-              required
             />
             <TextField
               variant="outlined"
@@ -109,7 +106,6 @@ class LoginForm extends React.Component {
               id="password"
               onChange={(event) => this.handleChange(event, 'password')}
               autoComplete="current-password"
-              required
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
@@ -133,9 +129,8 @@ class LoginForm extends React.Component {
 
 
 const mapStateToProps = state => ({
-  token: state.loginReducer.token,
-  email: state.loginReducer.email,
-  password: state.loginReducer.password
+  isLoginSuccess: state.login.isLoginSuccess,
+  error: state.login.error,
 });
 
 const mapDispatchToProps = dispatch =>
@@ -145,4 +140,4 @@ const mapDispatchToProps = dispatch =>
     dispatch
   );
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(useStyles)(LoginForm));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(useStyles)(Login));
