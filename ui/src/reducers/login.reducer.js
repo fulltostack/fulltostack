@@ -1,6 +1,7 @@
 import {
     LOGIN_SUCCESS,
     LOGIN_FAILED,
+    USER_LOGOUT,
   } from '../actions/actionTypes';
   
   const initialState = {
@@ -20,6 +21,11 @@ import {
           ...state,
           isLoginSuccess: false,
           error: action.error,
+        })
+      case USER_LOGOUT:
+        return ({
+          ...state,
+          ...initialState,
         })
     default:
       return state

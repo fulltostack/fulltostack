@@ -1,5 +1,7 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -10,10 +12,8 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import { login } from '../actions/actionCreators';
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux';
-import { getLocalStorage } from '../utils'
+import { login, loginfailed } from '../actions/actionCreators';
+import { validateLogin } from "../utils/validations";
 
 const useStyles = theme => ({
   '@global': {
@@ -36,7 +36,14 @@ const useStyles = theme => ({
     marginTop: theme.spacing(1),
   },
   submit: {
-    margin: theme.spacing(3, 0, 2),
+    margin: theme.spacing(3, 1, 2),
+  },
+  error: {
+    color: 'red'
+  },
+  action: {
+    display: 'flex',
+    flexDirection: 'row',
   },
 });
 
@@ -63,12 +70,18 @@ class Login extends React.Component {
       email: email,
       password: password
     }
-    this.props.login(formdata);
+
+    const error = validateLogin(formdata);
+
+    if (error.length > 0) {
+      this.props.loginfailed(error);
+    } else {
+      this.props.login(formdata);
+    }
   }
 
   render() {
     const classes = this.props.classes;
-    const { token } = this.props;
 
     if (this.props.isLoginSuccess) return <Redirect to={'/home'} />;
 
@@ -111,15 +124,32 @@ class Login extends React.Component {
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
             />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              className={classes.submit}
-            >
-              Sign In
-          </Button>
+            {
+              this.props.error && 
+              <Typography className={classes.error} component="h1" variant="h6">
+                {this.props.error}
+              </Typography>
+            }
+            <div className={classes.action}>
+              <Button
+                fullWidth
+                variant="contained"
+                color="secondary"
+                className={classes.submit}
+                onClick={() => this.props.history.push('/signup')}
+              >
+                Sign Up
+              </Button>
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                color="primary"
+                className={classes.submit}
+              >
+                Sign In
+              </Button>
+            </div>
           </form>
         </div>
       </Container>
@@ -135,7 +165,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators({
-    login
+    login,
+    loginfailed,
   },
     dispatch
   );

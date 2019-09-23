@@ -12,17 +12,17 @@ import rootSaga from './sagas';
 const sagaMiddleware = createSagaMiddleware();
 
 const store = createStore(
-    reducer,
-    applyMiddleware(sagaMiddleware, logger),
+  reducer,
+  applyMiddleware(sagaMiddleware, logger),
  );
  sagaMiddleware.run(rootSaga);
 
  render(
-    <Provider store={store}>
-      <App />
-    </Provider>,
+  <Provider store={store}>
+    <App />
+  </Provider>,
  document.getElementById('root'),
- );
+);
  
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

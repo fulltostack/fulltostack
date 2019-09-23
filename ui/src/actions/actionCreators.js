@@ -4,7 +4,8 @@ import {
   SIGNUP_FAILED,
   LOGIN,
   LOGIN_SUCCESS,
-  LOGIN_FAILED
+  LOGIN_FAILED,
+  USER_LOGOUT,
 }
   from './actionTypes'
 
@@ -36,4 +37,8 @@ export const loginsuccess = (data) => ({
 export const loginfailed = (error) => ({
   type: LOGIN_FAILED,
   error
+})
+
+export const userLogout = () => ({
+  type: USER_LOGOUT,
 })

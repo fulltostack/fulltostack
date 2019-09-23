@@ -4,7 +4,8 @@ import {
   call
 } from 'redux-saga/effects'
 import {
-  LOGIN
+  LOGIN,
+  USER_LOGOUT,
 } from '../actions/actionTypes'
 import {
   loginsuccess,
@@ -30,7 +31,8 @@ const loginRequest = ({ email, password }) =>
         return res.json(); 
       } else {
         const response = await res.json();
-        throw Error(response.reason);      }
+        throw Error(response.reason);      
+      }
     })
     .catch(error => {
       throw error
@@ -42,10 +44,15 @@ function* loginReq(action) {
     localStorage.setItem(AUTHENTICATION_TOKEN, response.token);
     yield put(loginsuccess(response))
   } catch (err) {
-    yield put(loginfailed(err))
+    yield put(loginfailed(err.message))
   }
 }
 
+function* logoutReq(action) {
+  localStorage.removeItem(AUTHENTICATION_TOKEN);
+}
+
 export default [
-  takeEvery(LOGIN, loginReq)
+  takeEvery(LOGIN, loginReq),
+  takeEvery(USER_LOGOUT, logoutReq)
 ]

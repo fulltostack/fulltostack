@@ -2,16 +2,14 @@ import React from 'react';
 import { bindActionCreators } from 'redux';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux'
-import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import { signup, signupfailed } from '../actions/actionCreators';
-import { validateSignup } from "../utils/validations";
+import { createWallet, createWalletFailed } from '../actions/wallet.actions';
+import { validateAddWallet } from "../utils/validations";
 
 const useStyles = theme => ({
   '@global': {
@@ -34,24 +32,19 @@ const useStyles = theme => ({
     marginTop: theme.spacing(1),
   },
   submit: {
-    margin: theme.spacing(3, 1, 2),
+    margin: theme.spacing(3, 0, 2),
   },
   error: {
     color: 'red'
   },
-  action: {
-    display: 'flex',
-    flexDirection: 'row',
-  },
 });
 
-class Signup extends React.Component {
+class AddWallet extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      name:'',
-      email: '',
-      password: ''
+      balance:'',
+      address: '',
     }
   }
 
@@ -63,31 +56,30 @@ class Signup extends React.Component {
 
   handleSubmit = event => {
     event.preventDefault();
-    const { email, password, name } = this.state;
+    const { balance, address } = this.state;
+    const blockchain = this.props.match.params.blockchain.toUpperCase();
 
-    const error = validateSignup({ email, password, name });
+    const error = validateAddWallet({ balance, address });
 
     if (error.length > 0) {
-      this.props.signupfailed(error);
+      this.props.createWalletFailed(error);
     } else {
-      this.props.signup({ name, email, password });
+      this.props.createWallet({ blockchain, balance, address });
     }
   }
 
   render() {
     const classes = this.props.classes;
+    const blockchain = this.props.match.params.blockchain.toUpperCase();
 
-    if (this.props.isSignupSuccess) return <Redirect to={'/login'} />;
+    if (this.props.isWalletCreated) return <Redirect to={'/home'} />;
 
     return (
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <div className={classes.paper}>
-          <Avatar className={classes.avatar}>
-            <LockOutlinedIcon />
-          </Avatar>
           <Typography component="h1" variant="h5">
-            Sign up
+            {`Add ${blockchain} Wallet`}
           </Typography>
           <form className={classes.form} onSubmit={this.handleSubmit}>
           <TextField
@@ -95,10 +87,10 @@ class Signup extends React.Component {
               margin="normal"
               required
               fullWidth
-              label="Name"
-              name="name"
-              autoComplete="name"
-              onChange={(event) => this.handleChange(event, 'name')}
+              label="Address"
+              name="address"
+              autoComplete="address"
+              onChange={(event) => this.handleChange(event, 'address')}
               autoFocus
             />
             <TextField
@@ -106,23 +98,11 @@ class Signup extends React.Component {
               margin="normal"
               required
               fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              onChange={(event) => this.handleChange(event, 'email')}
-            />
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              onChange={(event) => this.handleChange(event, 'password')}
-              autoComplete="current-password"
+              id="balance"
+              label="Balance"
+              name="balance"
+              autoComplete="balance"
+              onChange={(event) => this.handleChange(event, 'balance')}
             />
             {
               this.props.error && 
@@ -130,27 +110,24 @@ class Signup extends React.Component {
                 {this.props.error}
               </Typography>
             }
-
-            <div className={classes.action}>
-              <Button
-                fullWidth
-                variant="contained"
-                color="secondary"
-                className={classes.submit}
-                onClick={() => this.props.history.push('/login')}
-              >
-                Sign In
-              </Button>
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                color="primary"
-                className={classes.submit}
-              >
-                Sign Up
-              </Button>
-            </div>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              className={classes.submit}
+            >
+              Add Wallet
+            </Button>
+            <Button
+              fullWidth
+              variant="contained"
+              color="secondary"
+              className={classes.submit}
+              onClick={() => this.props.history.push('/home')}
+            >
+              Cancel
+            </Button>
           </form>
         </div>
       </Container>
@@ -158,15 +135,16 @@ class Signup extends React.Component {
   }
 }
 
+
 const mapStateToProps = state => ({
-  isSignupSuccess: state.signup.isSignupSuccess,
-  error: state.signup.error,
+  isWalletCreated: state.wallet.isWalletCreated,
+  error: state.wallet.error,
 });
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators({
-    signup,
-    signupfailed,
+    createWallet,
+    createWalletFailed,
   },
     dispatch
   );
@@ -174,4 +152,4 @@ const mapDispatchToProps = dispatch =>
 export default connect(
   mapStateToProps, 
   mapDispatchToProps,
-)(withStyles(useStyles)(Signup));
+)(withStyles(useStyles)(AddWallet));

@@ -1,17 +1,18 @@
 import React from 'react';
-import Avatar from '@material-ui/core/Avatar';
+import { bindActionCreators } from 'redux';
+import { Redirect } from 'react-router-dom';
+import { connect } from 'react-redux'
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux';
-import Header from './Header';
+import { 
+  createTransaction, 
+  createTransactionFailed, 
+} from '../actions/transaction.actions';
+import { validateAddTransaction } from "../utils/validations";
 
 const useStyles = theme => ({
   '@global': {
@@ -36,15 +37,17 @@ const useStyles = theme => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
+  error: {
+    color: 'red'
+  },
 });
 
-class AddtransactionForm extends React.Component {
+class AddTransaction extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      currency_amount: '',
-      currency_type: '',
-      to_address:''
+      amount:'',
+      toAddress: '',
     }
   }
 
@@ -56,85 +59,100 @@ class AddtransactionForm extends React.Component {
 
   handleSubmit = event => {
     event.preventDefault();
-    const { currency_amount, currency_type, to_address  } = this.state;
+    const { amount, toAddress } = this.state;
+    const blockchain = this.props.match.params.blockchain.toUpperCase();
+
+    const error = validateAddTransaction({ amount, toAddress });
+
+    if (error.length > 0) {
+      this.props.createTransactionFailed(error);
+    } else {
+      this.props.createTransaction({ blockchain, amount, toAddress });
+    }
   }
+
   render() {
     const classes = this.props.classes;
+    const blockchain = this.props.match.params.blockchain.toUpperCase();
+
+    if (this.props.isTransactionSuccess) return <Redirect to={'/home'} />;
 
     return (
-      <div>
-        <Header />
-        <Container component="main" maxWidth="xs">
-          <CssBaseline />
-          <div className={classes.paper}>
-            <Avatar className={classes.avatar}>
-              <LockOutlinedIcon />
-            </Avatar>
-            <Typography component="h1" variant="h5">
-              Add Btc Wallet
-        </Typography>
-            <form className={classes.form} onSubmit={this.handleSubmit}>
-              <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                label="Currency Amount"
-                name="currency_amount"
-                autoComplete="currency_amount"
-                onChange={(event) => this.handleChange(event, 'currency_amount')}
-                autoFocus
-                required
-              />
-              <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                name="currency_type"
-                label="Currency Type"
-                onChange={(event) => this.handleChange(event, 'currency_type')}
-                autoComplete="currency_type"
-                required
-              />
-              <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                name="to_address"
-                label="To Address"
-                onChange={(event) => this.handleChange(event, 'to_address')}
-                autoComplete="to_address"
-                required
-              />
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                color="primary"
-                className={classes.submit}
-              >
-                Sign In
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <div className={classes.paper}>
+          <Typography component="h1" variant="h5">
+            {`Add ${blockchain} Transaction`}
+          </Typography>
+          <form className={classes.form} onSubmit={this.handleSubmit}>
+          <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              label="To Address"
+              name="toAddress"
+              autoComplete="toAddress"
+              onChange={(event) => this.handleChange(event, 'toAddress')}
+              autoFocus
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="amount"
+              label="Amount"
+              name="amount"
+              autoComplete="amount"
+              onChange={(event) => this.handleChange(event, 'amount')}
+            />
+            {
+              this.props.error && 
+              <Typography className={classes.error} component="h1" variant="h6">
+                {this.props.error}
+              </Typography>
+            }
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              className={classes.submit}
+            >
+              Add Transaction
           </Button>
-            </form>
-          </div>
-        </Container>
-      </div>
+          <Button
+              fullWidth
+              variant="contained"
+              color="secondary"
+              className={classes.submit}
+              onClick={() => this.props.history.push('/home')}
+            >
+              Cancel
+          </Button>
+          </form>
+        </div>
+      </Container>
     );
   }
 }
 
+
 const mapStateToProps = state => ({
-  email: state.loginReducer.email,
-  password: state.loginReducer.password
+  isTransactionSuccess: state.transactions.isTransactionSuccess,
+  error: state.transactions.error,
 });
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators({
-
+    createTransaction,
+    createTransactionFailed,
   },
     dispatch
   );
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(useStyles)(AddtransactionForm));
+export default connect(
+  mapStateToProps, 
+  mapDispatchToProps,
+)(withStyles(useStyles)(AddTransaction));
