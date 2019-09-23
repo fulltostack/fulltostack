@@ -8,7 +8,8 @@ import {
 } from '../actions/actionTypes'
 import {
   signupsuccess,
-  signupfailed
+  signupfailed,
+  resetSignup,
 } from '../actions/actionCreators'
 import { signup } from '../constants/config'
 
@@ -42,10 +43,11 @@ const signupRequest = payload =>
 
 function* signupReq(action) {
   try {
-    const response = yield call(signupRequest, action.payload)
-    yield put(signupsuccess(response))
+    const response = yield call(signupRequest, action.payload);
+    yield put(signupsuccess(response));
+    yield put(resetSignup());
   } catch (err) {
-    yield put(signupfailed(err.message))
+    yield put(signupfailed(err.message));
   }
 }
 

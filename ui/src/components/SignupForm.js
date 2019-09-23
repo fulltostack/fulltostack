@@ -1,19 +1,17 @@
 import React from 'react';
-import { Redirect } from 'react-router-dom';
-import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { Redirect } from 'react-router-dom';
+import { connect } from 'react-redux'
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import { login, loginfailed } from '../actions/actionCreators';
-import { validateLogin } from "../utils/validations";
+import { signup, signupfailed } from '../actions/actionCreators';
+import { validateSignup } from "../utils/validations";
 
 const useStyles = theme => ({
   '@global': {
@@ -47,10 +45,11 @@ const useStyles = theme => ({
   },
 });
 
-class Login extends React.Component {
+class SignupForm extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      name:'',
       email: '',
       password: ''
     }
@@ -64,26 +63,21 @@ class Login extends React.Component {
 
   handleSubmit = event => {
     event.preventDefault();
-    const { email, password } = this.state;
+    const { email, password, name } = this.state;
 
-    const formdata = {
-      email: email,
-      password: password
-    }
-
-    const error = validateLogin(formdata);
+    const error = validateSignup({ email, password, name });
 
     if (error.length > 0) {
-      this.props.loginfailed(error);
+      this.props.signupfailed(error);
     } else {
-      this.props.login(formdata);
+      this.props.signup({ name, email, password });
     }
   }
 
   render() {
     const classes = this.props.classes;
 
-    if (this.props.isLoginSuccess) return <Redirect to={'/home'} />;
+    if (this.props.isSignupSuccess) return <Redirect to={'/login'} />;
 
     return (
       <Container component="main" maxWidth="xs">
@@ -93,9 +87,20 @@ class Login extends React.Component {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign In
-        </Typography>
+            Sign up
+          </Typography>
           <form className={classes.form} onSubmit={this.handleSubmit}>
+          <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              label="Name"
+              name="name"
+              autoComplete="name"
+              onChange={(event) => this.handleChange(event, 'name')}
+              autoFocus
+            />
             <TextField
               variant="outlined"
               margin="normal"
@@ -106,7 +111,6 @@ class Login extends React.Component {
               name="email"
               autoComplete="email"
               onChange={(event) => this.handleChange(event, 'email')}
-              autoFocus
             />
             <TextField
               variant="outlined"
@@ -120,25 +124,22 @@ class Login extends React.Component {
               onChange={(event) => this.handleChange(event, 'password')}
               autoComplete="current-password"
             />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
             {
               this.props.error && 
               <Typography className={classes.error} component="h1" variant="h6">
                 {this.props.error}
               </Typography>
             }
+
             <div className={classes.action}>
               <Button
                 fullWidth
                 variant="contained"
                 color="secondary"
                 className={classes.submit}
-                onClick={() => this.props.history.push('/signup')}
+                onClick={() => this.props.history.push('/login')}
               >
-                Sign Up
+                Sign In
               </Button>
               <Button
                 type="submit"
@@ -147,7 +148,7 @@ class Login extends React.Component {
                 color="primary"
                 className={classes.submit}
               >
-                Sign In
+                Sign Up
               </Button>
             </div>
           </form>
@@ -157,18 +158,20 @@ class Login extends React.Component {
   }
 }
 
-
 const mapStateToProps = state => ({
-  isLoginSuccess: state.login.isLoginSuccess,
-  error: state.login.error,
+  isSignupSuccess: state.signup.isSignupSuccess,
+  error: state.signup.error,
 });
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators({
-    login,
-    loginfailed,
+    signup,
+    signupfailed,
   },
     dispatch
   );
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(useStyles)(Login));
+export default connect(
+  mapStateToProps, 
+  mapDispatchToProps,
+)(withStyles(useStyles)(SignupForm));

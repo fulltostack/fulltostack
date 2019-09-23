@@ -6,12 +6,17 @@ import {
   LOGIN_SUCCESS,
   LOGIN_FAILED,
   USER_LOGOUT,
+  RESET_SIGNUP,
 }
   from './actionTypes'
 
 export const signup = (payload) => ({
   type: SIGNUP,
   payload
+})
+
+export const resetSignup = () => ({
+  type: RESET_SIGNUP,
 })
 
 export const signupsuccess = (data) => ({

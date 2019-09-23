@@ -42,7 +42,7 @@ const useStyles = theme => ({
   },
 });
 
-class AddTransaction extends React.Component {
+class CreateTransaction extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -138,7 +138,6 @@ class AddTransaction extends React.Component {
   }
 }
 
-
 const mapStateToProps = state => ({
   isTransactionSuccess: state.transactions.isTransactionSuccess,
   error: state.transactions.error,
@@ -155,4 +154,4 @@ const mapDispatchToProps = dispatch =>
 export default connect(
   mapStateToProps, 
   mapDispatchToProps,
-)(withStyles(useStyles)(AddTransaction));
+)(withStyles(useStyles)(CreateTransaction));

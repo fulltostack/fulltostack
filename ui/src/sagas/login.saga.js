@@ -48,7 +48,7 @@ function* loginReq(action) {
   }
 }
 
-function* logoutReq(action) {
+function logoutReq() {
   localStorage.removeItem(AUTHENTICATION_TOKEN);
 }
 

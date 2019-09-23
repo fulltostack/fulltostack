@@ -2,6 +2,7 @@ import {
   SIGNUP_SUCCESS,
   SIGNUP_FAILED,
   USER_LOGOUT,
+  RESET_SIGNUP,
 } from '../actions/actionTypes'
 
 const initialState = {
@@ -23,6 +24,11 @@ const signup = function (state = initialState, action) {
           error: action.error,
         })
       case USER_LOGOUT:
+        return ({
+          ...state,
+          ...initialState,
+        })
+      case RESET_SIGNUP:
         return ({
           ...state,
           ...initialState,
